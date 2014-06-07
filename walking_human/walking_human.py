@@ -1,6 +1,7 @@
 import pygame
 from time import sleep
 from positions import positions
+
 WIDTH = 640
 HEIGHT = 480
 COLOR = pygame.Color(255, 0, 0)
