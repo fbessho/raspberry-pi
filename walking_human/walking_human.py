@@ -1,5 +1,5 @@
 import pygame
-from time import sleep, time
+import time
 from positions import positions
 
 WIDTH = 640
@@ -16,16 +16,18 @@ def main():
     window = pygame.display.set_mode((WIDTH, HEIGHT))
     face_image = pygame.image.load("face.png")
     face_image.convert_alpha()
+    fps = pygame.time.Clock()
 
-    start_time = time()
+    start_time = time.time()
 
     while True:
         for position in positions:
             window.fill(pygame.Color(255, 255, 255))
             draw_header(window, start_time)
+            draw_fps(window)
             draw_human(window, position, face_image)
             pygame.display.update()
-            sleep(SEC_PER_FRAME)
+            fps.tick(30)
 
         # Quit when the close button in the window is pressed
         if pygame.QUIT in [e.type for e in pygame.event.get()]:
@@ -34,14 +36,28 @@ def main():
 # Draw time and score
 def draw_header(window, start_time):
     # Draw elapsed time
-    elapsed_sec = int(time() - start_time)
-    timeSurface = HEADER_FONT.render("Elapsed Time: %d" % elapsed_sec, 1, COLOR)
-    window.blit(timeSurface, (10, 10))
+    elapsed_sec = int(time.time() - start_time)
+    time_surface = HEADER_FONT.render("Elapsed Time: %d" % elapsed_sec, 1, COLOR)
+    window.blit(time_surface, (10, 10))
 
     # Draw score
     score = elapsed_sec * 100
-    scoreSurface = HEADER_FONT.render("Score: %d" % score, 1, COLOR)
-    window.blit(scoreSurface, (400, 10))
+    score_surface = HEADER_FONT.render("Score: %d" % score, 1, COLOR)
+    window.blit(score_surface, (WIDTH-240, 10))
+
+# Draw fps at bottom-right
+def draw_fps(window):
+    if not hasattr(draw_fps, 'frame_time_previous'):
+        draw_fps.frame_time_previous = time.time()
+        return
+
+    previous_time = draw_fps.frame_time_previous
+    current_time = time.time()
+    draw_fps.frame_time_previous = current_time
+    fps = 1 / (current_time - previous_time)
+
+    fps_surface = HEADER_FONT.render("fps: %d" % fps, 1, COLOR)
+    window.blit(fps_surface, (WIDTH-20*7, HEIGHT-35)) # 20*7 = (pixels of 1 char) * (num of characters)
 
 def draw_human(window, position, face_image):
     normalized_points = normalize(position, WIDTH/2)
