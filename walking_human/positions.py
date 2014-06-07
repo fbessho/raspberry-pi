@@ -1,4 +1,6 @@
 # This file contains positions of walking human.
+# Determine each positions from the image in 
+# http://alansmithee.pv.land.to/dame-01.html.
 # Each position comprises positions of joints as follows.
 #
 # position = (
