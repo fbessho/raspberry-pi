@@ -15,6 +15,10 @@ def main():
             draw_human(window, position)
             sleep(SEC_PER_FRAME)
 
+        # Quit when the close button in the window is pressed
+        if pygame.QUIT in [e.type for e in pygame.event.get()]:
+            break
+
 def draw_human(window, position):
     normalized_points = normalize(position, WIDTH/2)
     (head_center,    neck,   back,   hip,
